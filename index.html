@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ESP32 UART Manager v0.40.016 – Install USB Firmware</title>
+  <title>ESP32 WebFlasher-TAF – Firmware Installer</title>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
   <style>
@@ -30,14 +30,32 @@
     .language-switch{display:flex;align-items:center;gap:6px}
     .language-switch button{background:white;color:#1b2735;border:1px solid #becbd8;border-radius:7px;padding:5px 11px;cursor:pointer;font:inherit;font-size:13px}
     .language-switch button[aria-pressed="true"]{background:#194f84;border-color:#194f84;color:#fff;font-weight:700}
+    .project-picker{margin:18px 0;padding:17px;background:#eef5fe;border:1px solid #cbd9e8;border-radius:12px}
+    .project-picker label{display:block;font-weight:700;margin-bottom:7px}
+    .project-picker select{width:100%;padding:11px;border:1px solid #9eafc2;border-radius:8px;font:inherit;background:white;color:#1b2735}
+    .project-picker p{margin:8px 0;font-size:14px}
+    .chip-info{margin:15px 0 0;padding:11px;background:white;border-radius:8px;border:1px solid #d4e0ed}
+    .chip-info strong{display:block}
+    .status-error{color:#9a281b;font-weight:700}
+    esp-web-install-button button{border:0;border-radius:8px;padding:13px 17px;background:#194f84;color:white;font:inherit;font-weight:700;cursor:pointer}
+    esp-web-install-button button:disabled{opacity:.5;cursor:not-allowed}
   </style>
 </head>
 <body>
 <main>
   <div class="topline"><nav class="language-switch" aria-label="Language / Sprache"><button id="lang-en" type="button" lang="en" aria-pressed="false">EN</button><button id="lang-de" type="button" lang="de" aria-pressed="false">DE</button></nav></div>
-  <h1>ESP32 UART Manager</h1>
+  <h1>ESP32 WebFlasher-TAF</h1>
+  <section class="project-picker" aria-labelledby="project-label">
+    <label id="project-label" for="project-select" data-i18n="projectLabel">1. Software auswählen</label>
+    <select id="project-select" disabled aria-describedby="project-description"><option data-i18n="loadingProjects">Projekte werden geladen …</option></select>
+    <p id="project-description" aria-live="polite" data-i18n="projectInfo">Firmware-Projekt auswählen.</p>
+    <div class="chip-info"><strong data-i18n="chipHeading">2. Chip automatisch erkennen</strong>
+      <span data-i18n="chipText">ESP Web Tools erkennt den Chip beim Verbinden. Es wird nur ein kompatibles Firmware-Image angeboten.</span>
+      <p><span data-i18n="supportedLabel">Für diese Software verfügbar:</span> <strong id="supported-chips" style="display:inline">–</strong></p>
+    </div>
+  </section>
   <div class="version" aria-label="Version der zur Installation angebotenen Firmware" data-i18n-aria="versionAria">
-    <span data-i18n="versionLabel">Firmware-Version:</span> <strong id="firmware-version">v0.40.016</strong>
+    <span data-i18n="versionLabel">Firmware-Version:</span> <strong id="firmware-version">–</strong>
     <small data-i18n="development">Entwicklungsversion – nicht freigegeben</small>
   </div>
   <p data-i18n="intro">Die Firmware wird direkt aus dieser Webseite auf den angeschlossenen ESP32 übertragen. Eine lokale Entwicklungsumgebung ist nicht nötig.</p>
@@ -47,10 +65,11 @@
     <li data-i18n="quick3">Auf Verbinden klicken, den seriellen Anschluss auswählen und die Installation bestätigen.</li>
   </ol>
   <p class="warn"><strong data-i18n="warningTitle">Achtung:</strong> <span data-i18n="warning">Das vollständige USB-Image schreibt auch Bootloader und Partitionstabelle. Dabei können bestehende Geräteeinstellungen verloren gehen. Vorher die Konfiguration sichern. Nur für den klassischen ESP32 (Board: nodemcu-32s), nicht ESP32-S3/C3.</span></p>
-  <esp-web-install-button manifest="manifest.json?v=0.40.011">
-    <button slot="activate" data-i18n="installButton">ESP32 verbinden und Firmware installieren</button>
+  <esp-web-install-button id="installer" manifest="manifest.json">
+    <button id="install-activate" slot="activate" disabled data-i18n="installButton">3. Verbinden und Firmware installieren</button>
     <span slot="unsupported" data-i18n="unsupported">Dein Browser unterstützt Web Serial nicht. Bitte Chrome oder Edge am Computer verwenden.</span>
   </esp-web-install-button>
+  <div id="uart-guides">
   <details class="guide" id="usb-anleitung">
     <summary data-i18n="guideTitle">Bebilderte Anleitung zur USB-Firmware-Aktualisierung</summary>
     <p data-i18n="guideIntro">Die folgenden Bilder zeigen einen tatsächlich durchgeführten Installationsablauf. Sie stammen von der älteren Firmware v0.40.006; die hier oben angebotene Versionsnummer kann daher abweichen. Die Schritte gelten für den unterstützten klassischen ESP32.</p>
@@ -119,6 +138,16 @@
 </main>
 <script>
   const english = {
+    projectLabel: '1. Select software',
+    loadingProjects: 'Loading projects …',
+    projectInfo: 'Select a firmware project.',
+    chipHeading: '2. Automatic chip detection',
+    chipText: 'ESP Web Tools detects the chip when connecting. Only matching firmware builds are offered.',
+    supportedLabel: 'Available for this software:',
+    versionUnavailable: 'Version unavailable',
+    loadFailed: 'Firmware information could not be loaded. Installation is disabled.',
+    projectsFailed: 'Project list could not be loaded. Installation is disabled.',
+
     wifiGuideTitle: 'Set up Wi-Fi through the USB console',
     wifiGuideIntro: 'After flashing, enter Wi-Fi credentials directly in the serial console. No additional software is needed. The screenshots show firmware v0.40.016 with anonymized example network names.',
     wifiPrivacyTitle: 'Protect your password:',
@@ -160,7 +189,7 @@
     quick3: 'Click Connect, select the serial port and confirm the installation.',
     warningTitle: 'Warning:',
     warning: 'The complete USB image also writes the bootloader and partition table. Existing device settings may be lost. Back up your configuration first. Supports only classic ESP32 boards (nodemcu-32s), not ESP32-S3/C3.',
-    installButton: 'Connect ESP32 and install firmware',
+    installButton: '3. Connect and install firmware',
     unsupported: 'Your browser does not support Web Serial. Please use Chrome or Edge on a desktop computer.',
     guideTitle: 'Illustrated USB firmware installation guide',
     guideIntro: 'These screenshots show a real installation process. They were captured with an older firmware version (v0.40.006), so the version offered above may differ. These steps apply to the supported classic ESP32.',
@@ -207,18 +236,106 @@
     disclaimer: 'Development firmware, not an officially released product. Use at your own risk.'
   };
   const german = {};
+  const extraGerman = {
+    projectLabel: '1. Software auswählen', loadingProjects: 'Projekte werden geladen …',
+    projectInfo: 'Firmware-Projekt auswählen.', chipHeading: '2. Chip automatisch erkennen',
+    chipText: 'ESP Web Tools erkennt den Chip beim Verbinden. Es wird nur ein kompatibles Firmware-Image angeboten.',
+    supportedLabel: 'Für diese Software verfügbar:', versionUnavailable: 'Version nicht verfügbar',
+    loadFailed: 'Firmwareinformationen konnten nicht geladen werden. Installation deaktiviert.',
+    projectsFailed: 'Projektliste konnte nicht geladen werden. Installation deaktiviert.'
+  };
   document.querySelectorAll('[data-i18n]').forEach(element => { german[element.dataset.i18n] = element.textContent; });
   document.querySelectorAll('[data-i18n-alt]').forEach(element => { german[element.dataset.i18nAlt] = element.alt; });
   document.querySelectorAll('[data-i18n-aria]').forEach(element => { german[element.dataset.i18nAria] = element.getAttribute('aria-label'); });
+  Object.assign(german, extraGerman);
+  let activeLanguage = 'de';
+  let activeProject = null;
+  const projectSelect = document.getElementById('project-select');
+  const installer = document.getElementById('installer');
+  const installActivate = document.getElementById('install-activate');
+  const firmwareVersion = document.getElementById('firmware-version');
+  const supportedChips = document.getElementById('supported-chips');
+  const projectDescription = document.getElementById('project-description');
+  const listUrl = 'projects.json';
+  const labels = () => activeLanguage === 'de' ? german : english;
+  const noCache = url => `${url}${url.includes('?') ? '&' : '?'}_=${Date.now()}`;
+  async function readJson(url) {
+    const response = await fetch(noCache(url), {cache:'no-store'});
+    if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`);
+    return response.json();
+  }
+  function showProjectDescription() {
+    if (activeProject) projectDescription.textContent = activeLanguage === 'de' ? activeProject.description_de : activeProject.description_en;
+  }
+  function blockInstallation(message) {
+    installer.removeAttribute('manifest');
+    installActivate.disabled = true;
+    supportedChips.textContent = '–';
+    firmwareVersion.textContent = '–';
+    projectDescription.textContent = message;
+    projectDescription.classList.add('status-error');
+  }
+  async function chooseProject(id) {
+    const project = (window.tafProjects || []).find(item => item.id === id);
+    activeProject = project || null;
+    installActivate.disabled = true;
+    installer.removeAttribute('manifest');
+    projectDescription.classList.remove('status-error');
+    showProjectDescription();
+    supportedChips.textContent = '–';
+    firmwareVersion.textContent = '–';
+    document.getElementById('uart-guides').hidden = !project || project.guide !== 'uart';
+    if (!project) return;
+    try {
+      const manifest = await readJson(project.manifest);
+      // Do not display an installer unless the project manifest has real, supported builds.
+      const builds = Array.isArray(manifest.builds) ? manifest.builds : [];
+      const chips = [...new Set(builds.filter(b =>
+        ['ESP32','ESP32-C3','ESP32-S3'].includes(b.chipFamily) &&
+        Array.isArray(b.parts) && b.parts.length > 0 &&
+        b.parts.every(part => typeof part.path === 'string' && Number.isInteger(part.offset))
+      ).map(b => b.chipFamily))];
+      if (chips.length === 0) throw new Error('No valid firmware builds');
+      if (activeProject !== project) return;
+      firmwareVersion.textContent = typeof manifest.version === 'string' ? manifest.version : labels().versionUnavailable;
+      supportedChips.textContent = chips.join(', ');
+      // A versioned manifest URL ensures that the installer receives fresh metadata after releases.
+      installer.setAttribute('manifest', noCache(project.manifest));
+      installActivate.disabled = false;
+    } catch (error) {
+      if (activeProject === project) blockInstallation(labels().loadFailed);
+      console.error('Unable to load manifest', error);
+    }
+  }
+  async function loadProjects() {
+    try {
+      const response = await readJson(listUrl);
+      if (!Array.isArray(response.projects) || !response.projects.length) throw new Error('No projects');
+      window.tafProjects = response.projects.filter(project =>
+        project && /^[a-z0-9-]+$/.test(project.id) &&
+        typeof project.manifest === 'string' && !/^(?:https?:|\/|\\)/i.test(project.manifest) &&
+        !project.manifest.includes('..') &&
+        typeof project.description_de === 'string' && typeof project.description_en === 'string');
+      if (!window.tafProjects.length) throw new Error('Invalid project entries');
+      projectSelect.replaceChildren(...window.tafProjects.map(project => new Option(project.name, project.id)));
+      projectSelect.disabled = false;
+      await chooseProject(window.tafProjects[0].id);
+    } catch (error) {
+      blockInstallation(labels().projectsFailed);
+      console.error('Unable to load projects', error);
+    }
+  }
   function setLanguage(language) {
-    const texts = language === 'de' ? german : english;
+    activeLanguage = language;
+    const texts = labels();
     document.documentElement.lang = language;
-    document.title = language === 'de' ? 'ESP32 UART Manager v0.40.016 – USB Firmware installieren' : 'ESP32 UART Manager v0.40.016 – Install USB Firmware';
+    document.title = language === 'de' ? 'ESP32 WebFlasher-TAF – Firmware installieren' : 'ESP32 WebFlasher-TAF – Install firmware';
     document.querySelectorAll('[data-i18n]').forEach(element => { element.textContent = texts[element.dataset.i18n]; });
     document.querySelectorAll('[data-i18n-alt]').forEach(element => { element.alt = texts[element.dataset.i18nAlt]; });
     document.querySelectorAll('[data-i18n-aria]').forEach(element => { element.setAttribute('aria-label', texts[element.dataset.i18nAria]); });
     document.getElementById('lang-en').setAttribute('aria-pressed', String(language === 'en'));
     document.getElementById('lang-de').setAttribute('aria-pressed', String(language === 'de'));
+    showProjectDescription();
     try { localStorage.setItem('esp32-uart-flasher-language', language); } catch (_) { /* Browser storage may be disabled. */ }
   }
   let initialLanguage = /^de\b/i.test(navigator.language || '') ? 'de' : 'en';
@@ -226,13 +343,8 @@
   document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
   document.getElementById('lang-de').addEventListener('click', () => setLanguage('de'));
   setLanguage(initialLanguage);
-  fetch('manifest.json?v=0.40.011', {cache:'no-store'})
-    .then(response => { if (!response.ok) throw new Error('Manifest nicht erreichbar'); return response.json(); })
-    .then(manifest => {
-      if (typeof manifest.version === 'string' && /^v\d+\.\d+\.\d+$/.test(manifest.version)) {
-        document.getElementById('firmware-version').textContent = manifest.version;
-      }
-    }).catch(() => { /* Die feste Versionsanzeige bleibt sichtbar. */ });
+  projectSelect.addEventListener('change', () => chooseProject(projectSelect.value));
+  loadProjects();
 </script>
 </body>
 </html>

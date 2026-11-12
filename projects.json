@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "projects": [
+    {
+      "id": "uart-manager",
+      "name": "ESP32 UART Manager",
+      "description_de": "UART-Terminal und Konfigurationswerkzeug. Aktuell nur für den klassischen ESP32 (nodemcu-32s) verfügbar.",
+      "description_en": "UART terminal and configuration utility. Currently available for classic ESP32 (nodemcu-32s) only.",
+      "manifest": "manifest.json",
+      "guide": "uart"
+    }
+  ]
+}

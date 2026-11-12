@@ -1,0 +1,13 @@
+BS_ 2026-11-12 - Introduce multi-project firmware selection and chip-aware installation workflow
+
+- Rename the website presentation to ESP32 WebFlasher-TAF.
+- Add project catalog loaded from projects.json.
+- Load the selected project's manifest and firmware version without a fixed cache version.
+- Display chip families from verified manifest build entries and keep incompatible firmware out of the installer.
+- Keep the existing classic ESP32 UART Manager image, manifest, and illustrated guides intact.
+- Preserve German/English localization and document project onboarding and limitations.
+
+Changed files:
+- index.html
+- projects.json
+- README.md
