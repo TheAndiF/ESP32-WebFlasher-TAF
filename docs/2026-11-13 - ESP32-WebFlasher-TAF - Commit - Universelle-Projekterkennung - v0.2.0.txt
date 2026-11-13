@@ -1,0 +1,25 @@
+BS_Make WebFlasher project discovery universal
+
+Date: 2026-11-13
+
+Summary:
+- Discover firmware projects from projects.json and optionally from GitHub projects/ directories.
+- Support the documented projects/<repository>/manifest.json and firmware.json layout.
+- Display firmware version, repository, build time, commit, release channels and experimental warnings.
+- Preserve the existing root firmware and installer infrastructure for backward compatibility.
+- Update the static project catalog to use ESP32-UART-Manager published project files.
+- Update setup and discovery instructions for fork owners.
+
+Changed files:
+- index.html
+- projects.json
+- README.md
+- docs/2026-11-13 - ESP32-WebFlasher-TAF - Commit - Universelle-Projekterkennung - v0.2.0.txt
+- docs/2026-11-13 - ESP32-WebFlasher-TAF - Aenderungsdokumentation - Universelle-Projekterkennung - v0.2.0.pdf
+- docs/2026-11-13 - ESP32-WebFlasher-TAF - Aenderungsdokumentation - Universelle-Projekterkennung - v0.2.0.docx
+
+Validation:
+- Node.js syntax check passed for the inline JavaScript.
+- JSON catalog parsed successfully.
+- Browser/USB hardware flash validation was not performed.
+- Published project binaries are not included in this source archive and must already exist in GitHub.

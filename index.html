@@ -7,16 +7,36 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
   <style>
-    body{margin:0;background:#f4f6fa;color:#1b2735;font:16px/1.55 system-ui,Arial,sans-serif}
-    main{max-width:660px;margin:8vh auto;padding:32px;background:#fff;border-radius:16px;box-shadow:0 8px 32px #132b4819}
-    h1{margin:0 0 12px}ol{padding-left:24px}li{margin:12px 0}
-    .version{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 20px}
-    .version strong{background:#e5f0fc;color:#164d80;padding:7px 12px;border-radius:20px;font-size:18px}
-    .version small{color:#704e00;font-weight:600}
-    .warn{background:#fff3d7;border-left:4px solid #dd9800;padding:14px;border-radius:5px}
-    esp-web-install-button{display:block;margin:24px 0}
-    .guide{margin:24px 0;border:1px solid #cbd9e8;border-radius:12px;background:#f7fafe;padding:14px 18px}
-    .guide summary{font-weight:700;cursor:pointer;color:#153c60;font-size:18px}
+    :root{color-scheme:light;--ink:#15283b;--blue:#194f84;--line:#cbd9e8;--soft:#f4f8fd;--muted:#526477}
+    *{box-sizing:border-box}
+    body{margin:0;background:#f4f6fa;color:var(--ink);font:15px/1.55 system-ui,Arial,sans-serif}
+    main{max-width:710px;margin:32px auto;padding:30px 32px 36px;background:#fff;border-radius:16px;box-shadow:0 8px 32px #132b4819}
+    h1{margin:0 0 4px;font-size:29px;line-height:1.3}h2{font-size:17px;line-height:1.35;margin:0}p{margin:8px 0}a{color:#1663b4}
+    .topline{display:flex;justify-content:flex-end;margin-bottom:15px}
+    .language-switch{display:flex;gap:6px}
+    .language-switch button{background:#fff;color:var(--ink);border:1px solid #becbd8;border-radius:7px;padding:5px 11px;cursor:pointer;font:inherit;font-size:13px}
+    .language-switch button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+    .page-subtitle{color:var(--muted);margin:4px 0 23px}
+    .workflow-step{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0;background:#fff}
+    .step-heading{background:#edf4fc;padding:13px 16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--line)}
+    .step-number{display:inline-grid;place-items:center;min-width:27px;height:27px;border-radius:50%;background:var(--blue);color:#fff;font-size:14px;font-weight:700}
+    .step-content{padding:15px 16px 17px}
+    .step-content>p:first-child{margin-top:0}
+    #project-select{width:100%;padding:11px;border:1px solid #9eafc2;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+    .muted,.helper-line{color:var(--muted);font-size:13px}.helper-line{margin-top:12px}.chip-list{margin-top:13px}
+    .version{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 14px}
+    .version strong{background:#e5f0fc;color:#164d80;padding:6px 12px;border-radius:20px;font-size:17px}
+    .version small{color:#704e00;font-weight:600;font-size:12px}
+    .warn{background:#fff3d7;border-left:4px solid #dd9800;padding:13px 14px;border-radius:5px;margin:14px 0 16px}
+    .release-info{margin:12px 0;padding:12px;background:var(--soft);border:1px solid #d4e0ed;border-radius:9px;font-size:14px}
+    .release-info p{margin:5px 0}.release-info a{overflow-wrap:anywhere}
+    .experimental-note{background:#fff3d7;border-left:4px solid #dd9800;padding:10px;margin-top:8px;border-radius:5px}
+    esp-web-install-button{display:block;margin:10px 0 0}
+    esp-web-install-button button{border:0;border-radius:8px;padding:13px 17px;background:var(--blue);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+    esp-web-install-button button:disabled{opacity:.5;cursor:not-allowed}
+    .help-section{margin-top:23px}.help-section>h2{font-size:18px;margin:0 0 12px}
+    .guide{margin:10px 0;border:1px solid var(--line);border-radius:10px;background:#f7fafe;padding:13px 16px}
+    .guide summary{font-weight:700;cursor:pointer;color:#153c60;font-size:15px}
     .guide ol{margin:18px 0 8px;padding-left:24px}
     .guide li{padding:0 0 18px 2px;margin-bottom:18px;border-bottom:1px solid #dce5ef}
     .guide li:last-child{border:0;margin-bottom:0}
@@ -25,50 +45,54 @@
     .guide figcaption{font-size:13px;color:#4b5b6d;margin-top:5px}
     .guide .note{background:#fff4d9;border-left:3px solid #d89b16;padding:10px;margin:12px 0}
     .guide code{background:#e9eef5;border-radius:4px;padding:2px 5px}
-    a{color:#1663b4}
-    .topline{display:flex;justify-content:flex-end;margin-bottom:12px}
-    .language-switch{display:flex;align-items:center;gap:6px}
-    .language-switch button{background:white;color:#1b2735;border:1px solid #becbd8;border-radius:7px;padding:5px 11px;cursor:pointer;font:inherit;font-size:13px}
-    .language-switch button[aria-pressed="true"]{background:#194f84;border-color:#194f84;color:#fff;font-weight:700}
-    .project-picker{margin:18px 0;padding:17px;background:#eef5fe;border:1px solid #cbd9e8;border-radius:12px}
-    .project-picker label{display:block;font-weight:700;margin-bottom:7px}
-    .project-picker select{width:100%;padding:11px;border:1px solid #9eafc2;border-radius:8px;font:inherit;background:white;color:#1b2735}
-    .project-picker p{margin:8px 0;font-size:14px}
-    .chip-info{margin:15px 0 0;padding:11px;background:white;border-radius:8px;border:1px solid #d4e0ed}
-    .chip-info strong{display:block}
+    .page-footer{border-top:1px solid #dce5ef;margin-top:24px;padding-top:12px;color:var(--muted);font-size:13px}
+    .page-footer p{margin:8px 0}
     .status-error{color:#9a281b;font-weight:700}
-    esp-web-install-button button{border:0;border-radius:8px;padding:13px 17px;background:#194f84;color:white;font:inherit;font-weight:700;cursor:pointer}
-    esp-web-install-button button:disabled{opacity:.5;cursor:not-allowed}
+    [hidden]{display:none!important}
+    @media(max-width:740px){main{margin:12px;padding:20px 16px;border-radius:12px}h1{font-size:25px}.step-heading{padding:12px}.step-content{padding:13px}.version small{flex-basis:100%}}
   </style>
 </head>
 <body>
 <main>
   <div class="topline"><nav class="language-switch" aria-label="Language / Sprache"><button id="lang-en" type="button" lang="en" aria-pressed="false">EN</button><button id="lang-de" type="button" lang="de" aria-pressed="false">DE</button></nav></div>
   <h1>ESP32 WebFlasher-TAF</h1>
-  <section class="project-picker" aria-labelledby="project-label">
-    <label id="project-label" for="project-select" data-i18n="projectLabel">1. Software auswählen</label>
-    <select id="project-select" disabled aria-describedby="project-description"><option data-i18n="loadingProjects">Projekte werden geladen …</option></select>
-    <p id="project-description" aria-live="polite" data-i18n="projectInfo">Firmware-Projekt auswählen.</p>
-    <div class="chip-info"><strong data-i18n="chipHeading">2. Chip automatisch erkennen</strong>
-      <span data-i18n="chipText">ESP Web Tools erkennt den Chip beim Verbinden. Es wird nur ein kompatibles Firmware-Image angeboten.</span>
-      <p><span data-i18n="supportedLabel">Für diese Software verfügbar:</span> <strong id="supported-chips" style="display:inline">–</strong></p>
+  <p class="page-subtitle" data-i18n="intro">Die Firmware wird direkt aus dieser Webseite auf den angeschlossenen ESP32 übertragen. Eine lokale Entwicklungsumgebung ist nicht nötig.</p>
+  <section class="workflow-step" aria-labelledby="project-label">
+    <div class="step-heading"><span class="step-number" aria-hidden="true">1</span><h2 id="project-label" data-i18n="projectLabel">Software auswählen</h2></div>
+    <div class="step-content">
+      <select id="project-select" disabled aria-label="Software" data-i18n-aria="softwareAria" aria-describedby="project-description"><option data-i18n="loadingProjects">Projekte werden geladen …</option></select>
+      <p id="project-description" class="muted" aria-live="polite" data-i18n="projectInfo">Firmware-Projekt auswählen.</p>
     </div>
   </section>
-  <div class="version" aria-label="Version der zur Installation angebotenen Firmware" data-i18n-aria="versionAria">
-    <span data-i18n="versionLabel">Firmware-Version:</span> <strong id="firmware-version">–</strong>
-    <small data-i18n="development">Entwicklungsversion – nicht freigegeben</small>
-  </div>
-  <p data-i18n="intro">Die Firmware wird direkt aus dieser Webseite auf den angeschlossenen ESP32 übertragen. Eine lokale Entwicklungsumgebung ist nicht nötig.</p>
-  <ol>
-    <li data-i18n="quick1">ESP32 mit einem Daten-USB-Kabel an den Computer anschließen.</li>
-    <li data-i18n="quick2">Diese Seite in Chrome oder Edge auf dem Desktop öffnen.</li>
-    <li data-i18n="quick3">Auf Verbinden klicken, den seriellen Anschluss auswählen und die Installation bestätigen.</li>
-  </ol>
-  <p class="warn"><strong data-i18n="warningTitle">Achtung:</strong> <span data-i18n="warning">Das vollständige USB-Image schreibt auch Bootloader und Partitionstabelle. Dabei können bestehende Geräteeinstellungen verloren gehen. Vorher die Konfiguration sichern. Nur für den klassischen ESP32 (Board: nodemcu-32s), nicht ESP32-S3/C3.</span></p>
-  <esp-web-install-button id="installer" manifest="manifest.json">
-    <button id="install-activate" slot="activate" disabled data-i18n="installButton">3. Verbinden und Firmware installieren</button>
-    <span slot="unsupported" data-i18n="unsupported">Dein Browser unterstützt Web Serial nicht. Bitte Chrome oder Edge am Computer verwenden.</span>
-  </esp-web-install-button>
+  <section class="workflow-step" aria-labelledby="chip-heading">
+    <div class="step-heading"><span class="step-number" aria-hidden="true">2</span><h2 id="chip-heading" data-i18n="chipHeading">Chip automatisch erkennen</h2></div>
+    <div class="step-content">
+      <p data-i18n="chipText">ESP Web Tools erkennt den Chip beim Verbinden. Es wird nur ein kompatibles Firmware-Image angeboten.</p>
+      <p class="chip-list"><span data-i18n="supportedLabel">Für diese Software verfügbar:</span> <strong id="supported-chips">–</strong></p>
+      <p class="helper-line" data-i18n="connectHint">ESP32 per USB-Datenkabel anschließen. Verwende Chrome oder Edge am Computer.</p>
+    </div>
+  </section>
+  <section class="workflow-step install-step" aria-labelledby="install-heading">
+    <div class="step-heading"><span class="step-number" aria-hidden="true">3</span><h2 id="install-heading" data-i18n="installHeading">Firmware installieren</h2></div>
+    <div class="step-content">
+      <div class="version" aria-label="Version der zur Installation angebotenen Firmware" data-i18n-aria="versionAria">
+        <span data-i18n="versionLabel">Firmware-Version:</span> <strong id="firmware-version">–</strong>
+        <small data-i18n="development">Entwicklungsversion – nicht freigegeben</small>
+      </div>
+      <div class="release-info" id="release-info" hidden aria-live="polite">
+        <p><strong id="release-project"></strong> <a id="release-repository" target="_blank" rel="noopener noreferrer" hidden>Repository</a></p>
+        <p id="release-build-time" hidden></p><p id="release-commit" hidden></p>
+        <p id="release-channels"></p><p class="experimental-note" id="experimental-note" hidden></p>
+      </div>
+      <p class="warn"><strong data-i18n="warningTitle">Achtung:</strong> <span data-i18n="warning">Das Flashen kann Bootloader, Partitionstabelle und vorhandene Einstellungen überschreiben. Vorher Daten sichern. Nur Firmware für das tatsächlich unterstützte Board verwenden.</span></p>
+      <esp-web-install-button id="installer">
+        <button id="install-activate" slot="activate" disabled data-i18n="installButton">Verbinden und Firmware installieren</button>
+        <span slot="unsupported" data-i18n="unsupported">Dein Browser unterstützt Web Serial nicht. Bitte Chrome oder Edge am Computer verwenden.</span>
+      </esp-web-install-button>
+      <p class="helper-line" data-i18n="portHint">Anschluss auswählen und Installation im folgenden Dialog bestätigen.</p>
+    </div>
+  </section>
+  <section class="help-section" aria-labelledby="help-heading"><h2 id="help-heading" data-i18n="helpHeading">Hilfe &amp; Anleitungen</h2>
   <div id="uart-guides">
   <details class="guide" id="usb-anleitung">
     <summary data-i18n="guideTitle">Bebilderte Anleitung zur USB-Firmware-Aktualisierung</summary>
@@ -132,16 +156,24 @@
       </li>
     </ol>
   </details>
+  </section>
+  <footer class="page-footer">
   <p data-i18n="troubleshoot">Bei Verbindungsproblemen andere Programme mit geöffnetem COM-Port schließen. Gegebenenfalls BOOT während des Verbindens gedrückt halten.</p>
   <p data-i18n="publicNotice">Der Web-Flasher ist für eine öffentliche GitHub-Pages-Seite vorgesehen. Der Quellcode im privaten Repository wird dadurch nicht veröffentlicht; das angebotene Firmware-Image ist aber öffentlich herunterladbar.</p>
   <p data-i18n="disclaimer">Entwicklungsfirmware: keine freigegebene Produktversion. Verwendung auf eigene Verantwortung.</p>
+  </footer>
 </main>
 <script>
   const english = {
-    projectLabel: '1. Select software',
+    projectLabel: 'Select software',
+    softwareAria: 'Select software',
+    installHeading: 'Install firmware',
+    helpHeading: 'Help & documentation',
+    connectHint: 'Connect the ESP32 with a USB data cable. Use Chrome or Edge on a desktop computer.',
+    portHint: 'Select the serial port and confirm installation in the next dialog.',
     loadingProjects: 'Loading projects …',
     projectInfo: 'Select a firmware project.',
-    chipHeading: '2. Automatic chip detection',
+    chipHeading: 'Automatic chip detection',
     chipText: 'ESP Web Tools detects the chip when connecting. Only matching firmware builds are offered.',
     supportedLabel: 'Available for this software:',
     versionUnavailable: 'Version unavailable',
@@ -188,11 +220,11 @@
     quick2: 'Open this page in Chrome or Edge on a desktop computer.',
     quick3: 'Click Connect, select the serial port and confirm the installation.',
     warningTitle: 'Warning:',
-    warning: 'The complete USB image also writes the bootloader and partition table. Existing device settings may be lost. Back up your configuration first. Supports only classic ESP32 boards (nodemcu-32s), not ESP32-S3/C3.',
-    installButton: '3. Connect and install firmware',
+    warning: 'A full firmware image may overwrite the bootloader, partition table and saved settings. Back up your configuration before installing. Only matching builds are offered after chip detection.',
+    installButton: 'Connect and install firmware',
     unsupported: 'Your browser does not support Web Serial. Please use Chrome or Edge on a desktop computer.',
     guideTitle: 'Illustrated USB firmware installation guide',
-    guideIntro: 'These screenshots show a real installation process. They were captured with an older firmware version (v0.40.006), so the version offered above may differ. These steps apply to the supported classic ESP32.',
+    guideIntro: 'These screenshots show a real installation process. They were captured with an older firmware version (v0.40.006), so the version offered above may differ. The illustrated example uses a classic ESP32; installation details can differ for other chips.',
     backupTitle: 'Back up first:',
     backupText: 'The complete firmware image erases the flash memory. Saved settings, including Wi-Fi credentials, will be lost. Continue only if you can set up the device again.',
     step1Title: 'Connect the ESP32 and select a port.',
@@ -237,8 +269,8 @@
   };
   const german = {};
   const extraGerman = {
-    projectLabel: '1. Software auswählen', loadingProjects: 'Projekte werden geladen …',
-    projectInfo: 'Firmware-Projekt auswählen.', chipHeading: '2. Chip automatisch erkennen',
+    projectLabel: 'Software auswählen', softwareAria: 'Software auswählen', installHeading: 'Firmware installieren', helpHeading: 'Hilfe & Anleitungen', connectHint: 'ESP32 per USB-Datenkabel anschließen. Verwende Chrome oder Edge am Computer.', portHint: 'Anschluss auswählen und Installation im folgenden Dialog bestätigen.', loadingProjects: 'Projekte werden geladen …',
+    projectInfo: 'Firmware-Projekt auswählen.', chipHeading: 'Chip automatisch erkennen',
     chipText: 'ESP Web Tools erkennt den Chip beim Verbinden. Es wird nur ein kompatibles Firmware-Image angeboten.',
     supportedLabel: 'Für diese Software verfügbar:', versionUnavailable: 'Version nicht verfügbar',
     loadFailed: 'Firmwareinformationen konnten nicht geladen werden. Installation deaktiviert.',
@@ -257,23 +289,67 @@
   const supportedChips = document.getElementById('supported-chips');
   const projectDescription = document.getElementById('project-description');
   const listUrl = 'projects.json';
+  const projectDir = 'projects/';
+  // GitHub's public directory API is an optional discovery source. projects.json remains
+  // the portable, static catalog and works without external API access.
+  const directoryApi = 'https://api.github.com/repos/TheAndiF/ESP32-WebFlasher-TAF/contents/projects';
   const labels = () => activeLanguage === 'de' ? german : english;
   const noCache = url => `${url}${url.includes('?') ? '&' : '?'}_=${Date.now()}`;
+  const safeRelative = path => typeof path === 'string' && !!path &&
+    !/^(?:[a-z]+:|\/|\\)/i.test(path) &&
+    !path.split('/').some(part => part === '..' || part === '.' || !part);
+  const safeRepoUrl = url => typeof url === 'string' && /^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/.test(url);
+  const fileBase = path => path.substring(0, path.lastIndexOf('/') + 1);
   async function readJson(url) {
     const response = await fetch(noCache(url), {cache:'no-store'});
     if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`);
     return response.json();
   }
+  function normalizeProject(entry) {
+    if (!entry || typeof entry !== 'object') return null;
+    const folder = entry.folder || entry.repository_name || entry.project;
+    let manifest = entry.manifest;
+    if (!manifest && typeof folder === 'string' && /^[A-Za-z0-9_.-]+$/.test(folder))
+      manifest = `${projectDir}${folder}/manifest.json`;
+    if (!safeRelative(manifest) || !manifest.endsWith('.json')) return null;
+    const id = typeof entry.id === 'string' && /^[A-Za-z0-9_.-]+$/.test(entry.id) ? entry.id : (folder || manifest.replace(/\W+/g, '-'));
+    const name = typeof entry.name === 'string' && entry.name.trim() ? entry.name : (folder || id);
+    return { ...entry, id, name, manifest,
+      description_de: entry.description_de || '', description_en: entry.description_en || '',
+      firmware: safeRelative(entry.firmware) ? entry.firmware : `${fileBase(manifest)}firmware.json` };
+  }
+  async function discoverProjects() {
+    try {
+      const response = await fetch(directoryApi, {headers:{Accept:'application/vnd.github+json'}});
+      if (!response.ok) return [];
+      const entries = await response.json();
+      return Array.isArray(entries) ? entries.filter(item => item.type === 'dir' && /^[A-Za-z0-9_.-]+$/.test(item.name))
+        .map(item => normalizeProject({folder:item.name, name:item.name})) : [];
+    } catch (error) { console.info('Directory discovery unavailable; using projects.json', error); return []; }
+  }
   function showProjectDescription() {
-    if (activeProject) projectDescription.textContent = activeLanguage === 'de' ? activeProject.description_de : activeProject.description_en;
+    if (activeProject) projectDescription.textContent =
+      (activeLanguage === 'de' ? activeProject.description_de : activeProject.description_en) || activeProject.name;
+  }
+  function clearRelease() {
+    document.getElementById('release-info').hidden = true;
+    for (const id of ['release-build-time','release-commit','experimental-note']) document.getElementById(id).hidden = true;
+    document.getElementById('release-repository').hidden = true;
   }
   function blockInstallation(message) {
     installer.removeAttribute('manifest');
     installActivate.disabled = true;
     supportedChips.textContent = '–';
     firmwareVersion.textContent = '–';
+    clearRelease();
     projectDescription.textContent = message;
     projectDescription.classList.add('status-error');
+  }
+  function validBuild(build, base) {
+    return build && typeof build.chipFamily === 'string' && /^[A-Za-z0-9-]+$/.test(build.chipFamily) &&
+      Array.isArray(build.parts) && build.parts.length > 0 && build.parts.every(part =>
+        safeRelative(part.path) && Number.isInteger(part.offset) && part.offset >= 0 &&
+        new URL(part.path, base).origin === location.origin);
   }
   async function chooseProject(id) {
     const project = (window.tafProjects || []).find(item => item.id === id);
@@ -281,6 +357,7 @@
     installActivate.disabled = true;
     installer.removeAttribute('manifest');
     projectDescription.classList.remove('status-error');
+    clearRelease();
     showProjectDescription();
     supportedChips.textContent = '–';
     firmwareVersion.textContent = '–';
@@ -288,18 +365,46 @@
     if (!project) return;
     try {
       const manifest = await readJson(project.manifest);
-      // Do not display an installer unless the project manifest has real, supported builds.
+      const base = new URL(project.manifest, location.href);
       const builds = Array.isArray(manifest.builds) ? manifest.builds : [];
-      const chips = [...new Set(builds.filter(b =>
-        ['ESP32','ESP32-C3','ESP32-S3'].includes(b.chipFamily) &&
-        Array.isArray(b.parts) && b.parts.length > 0 &&
-        b.parts.every(part => typeof part.path === 'string' && Number.isInteger(part.offset))
-      ).map(b => b.chipFamily))];
-      if (chips.length === 0) throw new Error('No valid firmware builds');
+      const valid = builds.filter(build => validBuild(build, base));
+      if (!valid.length || valid.length !== builds.length) throw new Error('Invalid or missing firmware builds');
+      let firmware = null;
+      try { firmware = await readJson(project.firmware); }
+      catch (error) { console.info('Firmware metadata unavailable for', project.id, error); }
       if (activeProject !== project) return;
-      firmwareVersion.textContent = typeof manifest.version === 'string' ? manifest.version : labels().versionUnavailable;
-      supportedChips.textContent = chips.join(', ');
-      // A versioned manifest URL ensures that the installer receives fresh metadata after releases.
+      firmwareVersion.textContent = (firmware && firmware.version) || manifest.version || labels().versionUnavailable;
+      supportedChips.textContent = [...new Set(valid.map(build => build.chipFamily))].join(', ');
+      if (firmware && typeof firmware === 'object') {
+        const card = document.getElementById('release-info'); card.hidden = false;
+        document.getElementById('release-project').textContent = firmware.project || project.name;
+        const link = document.getElementById('release-repository');
+        if (safeRepoUrl(firmware.repository)) { link.href = firmware.repository; link.hidden = false; }
+        const time = document.getElementById('release-build-time');
+        if (typeof firmware.built_at === 'string') { time.textContent = `Build (UTC): ${firmware.built_at}`; time.hidden = false; }
+        const commit = document.getElementById('release-commit');
+        if (typeof firmware.commit === 'string') {
+          commit.textContent = `Commit: ${firmware.commit.slice(0, 12)}${firmware.commit_message ? ' – ' + firmware.commit_message : ''}`;
+          commit.hidden = false;
+        }
+        const channels = Array.isArray(firmware.builds) ? firmware.builds : [];
+        document.getElementById('release-channels').textContent = valid.map(build => {
+          const meta = channels.find(item => item.chipFamily === build.chipFamily);
+          return `${build.chipFamily}: ${meta?.channel || build.channel || 'unspecified'}`;
+        }).join(' · ');
+        const experimental = valid.some(build => {
+          const meta = channels.find(item => item.chipFamily === build.chipFamily);
+          return (meta?.channel || build.channel) === 'experimental';
+        });
+        const note = document.getElementById('experimental-note');
+        if (experimental) {
+          note.textContent = (activeLanguage === 'de' ? 'Achtung: Experimentelle Firmware vorhanden. ' : 'Warning: Experimental firmware available. ') +
+            (firmware.experimental_warning || (activeLanguage === 'de' ? 'Nicht hardwaregetestete Builds nur auf eigenes Risiko flashen.' : 'Flash untested builds at your own risk.'));
+          note.hidden = false;
+        }
+      }
+      // Use the original HTTP manifest: relative firmware paths are resolved by ESP Web Tools
+      // against the manifest URL (not against this document or a generated blob URL).
       installer.setAttribute('manifest', noCache(project.manifest));
       installActivate.disabled = false;
     } catch (error) {
@@ -309,14 +414,17 @@
   }
   async function loadProjects() {
     try {
-      const response = await readJson(listUrl);
-      if (!Array.isArray(response.projects) || !response.projects.length) throw new Error('No projects');
-      window.tafProjects = response.projects.filter(project =>
-        project && /^[a-z0-9-]+$/.test(project.id) &&
-        typeof project.manifest === 'string' && !/^(?:https?:|\/|\\)/i.test(project.manifest) &&
-        !project.manifest.includes('..') &&
-        typeof project.description_de === 'string' && typeof project.description_en === 'string');
-      if (!window.tafProjects.length) throw new Error('Invalid project entries');
+      let catalog = [];
+      try {
+        const response = await readJson(listUrl);
+        if (Array.isArray(response.projects)) catalog = response.projects.map(normalizeProject).filter(Boolean);
+      } catch (error) { console.info('Project catalog unavailable', error); }
+      const discovered = await discoverProjects();
+      // When both contain the same manifest, the catalog supplies its descriptions and guide.
+      const byManifest = new Map(catalog.map(project => [project.manifest, project]));
+      for (const project of discovered) if (!byManifest.has(project.manifest)) byManifest.set(project.manifest, project);
+      window.tafProjects = [...byManifest.values()];
+      if (!window.tafProjects.length) throw new Error('No valid projects');
       projectSelect.replaceChildren(...window.tafProjects.map(project => new Option(project.name, project.id)));
       projectSelect.disabled = false;
       await chooseProject(window.tafProjects[0].id);

@@ -1,0 +1,13 @@
+BL_Organize firmware installer into three clear steps
+
+Date: 2026-11-13
+
+Summary:
+- Reorganized the firmware installer into three consistent, visually separated steps: software selection, automatic chip detection, and firmware installation.
+- Consolidated firmware version, release metadata, warnings, and the install action in one section.
+- Grouped existing USB and Wi-Fi guides under a dedicated help section and improved responsive spacing.
+- Updated English and German interface strings while preserving the existing project discovery and ESP Web Tools installation flow.
+- Left the firmware images and JSON manifests unchanged.
+
+Changed files:
+- index.html
