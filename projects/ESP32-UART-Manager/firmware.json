@@ -1,0 +1,32 @@
+{
+  "project": "ESP32-UART-Manager",
+  "repository": "https://github.com/TheAndiF/ESP32-UART-Manager",
+  "version": "v0.40.016",
+  "commit": "2db59fc86deca8d610100465ba78e959109fc24a",
+  "commit_message": "BS_Fix WebFlasher deployment secret name",
+  "built_at": "2026-11-13T00:54:39.578984+00:00",
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "channel": "stable",
+      "file": "ESP32/firmware.bin",
+      "sha256": "3d6707f746af019c2615e6e0dffdb31ae3ff178f00b958e5b3576f4ffbefbc5b",
+      "size": 1950048
+    },
+    {
+      "chipFamily": "ESP32-C3",
+      "channel": "experimental",
+      "file": "ESP32-C3/firmware.bin",
+      "sha256": "cde6e2da217c54a41b87e680147b2abc46ff80e63fb2614a2fe07038a158655c",
+      "size": 2119456
+    },
+    {
+      "chipFamily": "ESP32-S3",
+      "channel": "experimental",
+      "file": "ESP32-S3/firmware.bin",
+      "sha256": "ef07f551dee27fd2405f7fd5cb868379304ae84d8e16e59bc434a23f2d010e46",
+      "size": 1916752
+    }
+  ],
+  "experimental_warning": "ESP32-C3 and ESP32-S3 builds have not been hardware-tested; flash at your own risk."
+}

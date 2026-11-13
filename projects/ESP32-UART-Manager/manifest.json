@@ -1,0 +1,37 @@
+{
+  "name": "ESP32 UART Manager",
+  "version": "v0.40.016",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "channel": "stable",
+      "parts": [
+        {
+          "path": "ESP32/firmware.bin",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "chipFamily": "ESP32-C3",
+      "channel": "experimental",
+      "parts": [
+        {
+          "path": "ESP32-C3/firmware.bin",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "chipFamily": "ESP32-S3",
+      "channel": "experimental",
+      "parts": [
+        {
+          "path": "ESP32-S3/firmware.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
